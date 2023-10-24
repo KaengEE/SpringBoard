@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+
+	<!-- 전체 게시물 목록(최신순) -->
+	<select id="list" resultType="com.board.domain.BoardVO">
+		SELECT
+		bno,
+		title,
+		writer,
+		regDate,
+		viewCnt
+		FROM tbl_board
+		ORDER BY bno desc
+	</select>
+	
+	<!-- 게시물 목록(최신 10개) + 페이징 -->
+	<select id="listPage" parameterType="hashMap" resultType="com.board.domain.BoardVO">
+		SELECT
+		bno,
+		title,
+		writer,
+		regDate,
+		viewCnt
+		FROM tbl_board
+		ORDER BY bno desc
+		LIMIT #{displayPost},#{postNum}
+	</select>
+		
+	<select id="book" resultType="com.board.domain.BookVO">
+		SELECT
+		book_id,
+		title,
+		category,
+		price,
+		insert_date
+		FROM book
+	</select>
+	
+	
+	<!-- 게시물 작성 -->
+	<insert id="write" parameterType="com.board.domain.BoardVO">
+		INSERT INTO
+		tbl_board(title, content, writer)
+		VALUES(#{title},#{content},#{writer})
+	</insert>
+	
+	
+	<!-- 게시물 조회 -->
+	<select id="view" parameterType="int" resultType="com.board.domain.BoardVO"> <!-- 결과값은 VO 파라미터값은 int -->
+		SELECT
+		bno,
+		title,
+		content,
+		writer,
+		regDate,
+		viewCnt
+		FROM tbl_board
+		WHERE bno = #{bno}
+	</select>
+	
+	<!-- 게시물 수정 -->
+	<update id="modify" parameterType="com.board.domain.BoardVO">
+		UPDATE tbl_board
+		SET title = #{title},
+		    content = #{content},
+		    writer = #{writer}
+		WHERE bno = #{bno}
+	</update>
+	
+	<!-- 게시물 삭제 -->
+	<delete id="delete" parameterType="int">
+		DELETE
+		FROM tbl_board
+		WHERE bno = #{bno}
+	</delete>
+	
+	<!-- 조회수 증가 -->
+	<update id="viewCnt" parameterType="int">
+		UPDATE tbl_board
+		SET viewCnt = viewCnt + 1
+		WHERE bno = #{bno}
+	</update>
+	
+	<!-- 전체 게시물 숫자 -->
+	<select id="count" resultType="int">
+		SELECT count(bno)
+		FROM tbl_board
+	</select>
+	
+	<!-- 게시물 목록(최신 10개) + 페이징 + 검색 -->
+	<select id="listPageSearch" parameterType="hashMap" resultType="com.board.domain.BoardVO">
+		SELECT
+		bno,
+		title,
+		writer,
+		regDate,
+		viewCnt
+		FROM tbl_board
+		<if test="searchType.equals('title')">
+			WHERE title LIKE CONCAT('%',#{keyword},'%')
+		</if>
+		<if test="searchType.equals('content')">
+			WHERE content LIKE CONCAT('%',#{keyword},'%')
+		</if>
+		<if test="searchType.equals('title_content')">
+			WHERE title LIKE CONCAT('%',#{keyword},'%') OR content LIKE CONCAT('%',#{keyword},'%')
+		</if>
+		<if test="searchType.equals('writer')">
+			WHERE writer LIKE CONCAT('%',#{keyword},'%')
+		</if>
+		ORDER BY bno desc
+		LIMIT #{displayPost},#{postNum}
+	</select>
+
+	<!-- 검색 게시물 총개수 -->
+	<select id="searchCount" parameterType="hashMap" resultType="int">
+		SELECT count(bno)
+		FROM tbl_board
+		<if test="searchType.equals('title')">
+			WHERE title LIKE CONCAT('%',#{keyword},'%')
+		</if>
+		<if test="searchType.equals('content')">
+			WHERE content LIKE CONCAT('%',#{keyword},'%')
+		</if>
+		<if test="searchType.equals('title_content')">
+			WHERE title LIKE CONCAT('%',#{keyword},'%') OR content LIKE CONCAT('%',#{keyword},'%')
+		</if>
+		<if test="searchType.equals('writer')">
+			WHERE writer LIKE CONCAT('%',#{keyword},'%')
+		</if>
+	</select>
+	
+	
+</mapper>
