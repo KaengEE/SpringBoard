@@ -54,8 +54,9 @@
 	    			<p>
 	    				<a href="/reply/modify?bno=${view.bno }&rno=${reply.rno }">수정</a>
 	    				 / 
-	    				<a href="/reply/delete?bno=${view.bno }&rno=${reply.rno }">삭제</a>
+	    				<a onclick="confirmDelete(${view.bno },${reply.rno })" style="cursor:pointer; text-decoration: underline;">삭제</a>
 	    			</p>
+	    			
 	    			
 	    			<hr/>
 	    		</div>
@@ -78,6 +79,17 @@
     </form>
 
 	<!-- 댓글 끝 -->
+	
+	<script>
+	function confirmDelete(bno, rno){
+	    const check = confirm("정말 삭제하시겠습니까?");
+	    if (check) {
+	        window.location.href = "/reply/delete?bno="+bno+ "&rno="+rno;
+	    } else{
+	    	alert("삭제를 취소하였습니다.");
+	    }
+	}
+	</script>
 	
 </body>
 </html>
