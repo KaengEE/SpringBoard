@@ -16,6 +16,7 @@
 <p><a href="/board/list">게시물 목록</a></p>
 <p><a href="/board/write">게시물 작성</a></p>
 <p><a href="/board/listPage?num=1">게시물 페이징</a></p>
+<p><a href="/board/listPageSearch?num=1&searchType=no">게시물 페이징(+검색)</a></p>
 <!-- <p><a href="/book/list">책 목록</a></p> -->
 </body>
 </html>

@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.board.domain.BoardVO;
 import com.board.domain.Page;
+import com.board.domain.ReplyVO;
 import com.board.service.BoardService;
+import com.board.service.ReplyService;
 
 @Controller
 @RequestMapping("/board")
@@ -20,6 +22,9 @@ public class BoardController {
 	
 	@Autowired
 	private BoardService boardService; 
+	
+	@Autowired
+	private ReplyService replyService;
 	
 	//목록페이지
 	/* @RequestMapping(value = "/list", method = RequestMethod.GET) */
@@ -87,10 +92,14 @@ public class BoardController {
 		return "redirect:/board/list"; //목록으로
 	}
 	
+	//게시물 VIEW
 	@GetMapping("/view")
 	public void getView(@RequestParam("bno") int bno, Model model) throws Exception {
 		BoardVO vo = boardService.view(bno); 
 		model.addAttribute("view", vo);
+		//댓글 조회
+		List<ReplyVO> replyList = replyService.list(bno);
+		model.addAttribute("reply", replyList);
 	}
 	
 	//수정페이지
